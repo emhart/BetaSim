@@ -9,12 +9,12 @@ require(ggplot2)
 
 
 #### Mix of sites and probabilities of mixing
-pop_sizes <- seq(1,4,length=30)
+pop_sizes <- seq(1.5,4,length=10)
 generalist <- matrix(0,nrow=0,ncol=3)
-gamma.vals <- round(seq(0,3,length=10),2)
+gamma.vals <- round(seq(-2,2,length=10),2)
 for(i in pop_sizes){
   for(j in gamma.vals){
-    z <- mean(replicate(10,median(calcbeta(df_to_matrix(beta_predation(betasim(n.site=10, n.indiv.site=10^i,p.mix=.3,rand="poisson"),pred.gamma = j, pred.spec = "none", pred.rand = "binom"))))))
+    z <- mean(replicate(10,median(calcbeta(array_to_matrix(beta_predation(betasim(n.site=10, n.indiv.site=10^i,p.mix=1,rand="poisson",spcat=9,n.abund=1),pred.gamma = j, pred.spec = "none", pred.rand = "binom"))))))
     generalist <- rbind(generalist,c(i,j,z))           
   }
 }
@@ -29,12 +29,12 @@ test <- generalist
 
 
 #### Mix of sites and probabilities of mixing
-pop_sizes <- seq(1,4,length=30)
+pop_sizes <- seq(1.5,4,length=30)
 common <- matrix(0,nrow=0,ncol=3)
-alpha.vals <- round(seq(0,5,length=10),2)
+alpha.vals <- round(seq(0,2,length=10),2)
 for(i in pop_sizes){
   for(j in alpha.vals){
-    z <- mean(replicate(10,median(calcbeta(df_to_matrix(beta_predation(betasim(n.site=10, n.indiv.site=10^i,p.mix=.3,rand="poisson"),pred.gamma = 2,pred.alpha=j, pred.spec = "cabund", pred.rand = "binom"))))))
+    z <- mean(replicate(10,median(calcbeta(array_to_matrix(beta_predation(betasim(n.site=10, n.indiv.site=10^i,p.mix=.3,rand="poisson"),pred.gamma = 2,pred.alpha=j, pred.spec = "cabund", pred.rand = "binom"))))))
     common <- rbind(common,c(i,j,z))           
   }
 }
@@ -42,15 +42,16 @@ for(i in pop_sizes){
 common <- as.data.frame(common)
 colnames(common) <-  c("population","alpha","beta")
 ggplot(common,aes(x=population,y=beta,group=alpha,colour=as.factor(alpha)))+geom_point()+geom_path()+theme_bw()
+ggplot(c2,aes(x=population,y=beta,group=alpha,colour=as.factor(alpha)))+geom_point()+geom_path()+theme_bw()
 
 
 #### Mix of sites and probabilities of mixing
-pop_sizes <- seq(1,4,length=30)
+pop_sizes <- seq(1.5,4,length=30)
 rare <- matrix(0,nrow=0,ncol=3)
 alpha.vals <- round(seq(0,5,length=10),2)
 for(i in pop_sizes){
   for(j in alpha.vals){
-    z <- mean(replicate(10,median(calcbeta(df_to_matrix(beta_predation(betasim(n.site=10, n.indiv.site=10^i,p.mix=.3,rand="poisson"),pred.gamma = 2,pred.alpha=j, pred.spec = "rabund", pred.rand = "binom"))))))
+    z <- mean(replicate(10,median(calcbeta(array_to_matrix(beta_predation(betasim(n.site=10, n.indiv.site=10^i,p.mix=.3,rand="poisson"),pred.gamma = 2,pred.alpha=j, pred.spec = "rabund", pred.rand = "binom"))))))
     rare <- rbind(rare,c(i,j,z))           
   }
 }
@@ -64,24 +65,13 @@ ggplot(rare,aes(x=population,y=beta,group=alpha,colour=as.factor(alpha)))+geom_p
 ### add a no predator scenario...
 
 #### Mix of sites and probabilities of mixing
-pop_sizes <- seq(1,4,length=30)
+pop_sizes <- seq(1.5,4,length=30)
 no_pred<- matrix(0,nrow=0,ncol=3)
 
 for(i in pop_sizes){
  
-    z <- mean(replicate(10,median(calcbeta(df_to_matrix(betasim(n.site=10, n.indiv.site=10^i,p.mix=.3,rand="poisson"))))))
+    z <- mean(replicate(10,median(calcbeta(array_to_matrix(betasim(n.site=10, n.indiv.site=10^i,p.mix=.3,rand="poisson"))))))
     no_pred <- rbind(no_pred,c(i,NA,z))           
 }
 no_pred <- as.data.frame(no_pred)
 colnames(no_pred) <- c("population","predgamma","beta")
-
-tmp <- subset(generalist,generalist$predgamma==2)
-tmp2 <- subset(common,common$predgamma==1.67)
-tmp3 <- subset(rare,rare$predgamma==1.67)
-tmp$name <- "Generalist"
-tmp2$name <- "Common Pref"
-tmp3$name <- "Rare Pref"
-no_pred$name <- "No Predation"
-abundf <- rbind(tmp,tmp2,tmp3,no_pred)
-
-ggplot(abundf,aes(x=population,y=beta,group=name,colour=name))+geom_path()+geom_point()+theme_bw()

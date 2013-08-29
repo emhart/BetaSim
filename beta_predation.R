@@ -39,29 +39,20 @@ beta_predation <-function(d,
     ## dim 3 == site, dim 1 == origin
     origsite <- (slice.index(pred.logis,1)==slice.index(pred.logis,3))
     pred.logis[] <- pred.logis[] + ifelse(origsite,pred.alpha,-pred.alpha)
-  } else if (pred.spec=="cabund") {
-   ### Abundance score is calculated based on relative abundance of each taxa.
     
-    abundscore <- seq(1,-1,length=n.abund)[slice.index(pred.logis,2)]
-    pred.logis[] <- pred.logis[] + pred.alpha*abundscore
+    ### preference for common species
+    } else if (pred.spec=="cabund") {
+
     for(i in 1:dim(d)[3]){
-      index <- t(apply(d[,,i],1,order,decreasing=T))
-      for(j in 1:dim(index)[1]){
-        pred.logis[j,,i] <- pred.logis[j,index[j,],i]
-      }
+      pred.logis[,,i] <- pred.alpha*pred.gamma*beta_abun_score(d[,,i])
     }
     
     
+    ### Preference for rare spceies
   } else if (pred.spec=="rabund") {
     
-    abundscore <- seq(-1,1,length=n.abund)[slice.index(pred.logis,2)]
-    pred.logis[] <- pred.logis[] + pred.alpha*abundscore
-    ### Now make sure that reductions follow the actual values
     for(i in 1:dim(d)[3]){
-      index <- t(apply(d[,,i],1,order,decreasing=T))
-      for(j in 1:dim(index)[1]){
-        pred.logis[j,,i] <- pred.logis[j,index[j,],i]
-      }
+      pred.logis[,,i] <- pred.alpha*pred.gamma*beta_abun_score(d[,,i],reverse=TRUE)
     }
     
   }

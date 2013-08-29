@@ -1,3 +1,6 @@
+
+
+
 betasim <- function(n.abund=5,        ## number of abundance categories
                     p.abund=0.5,      ## relative ranking of subsequent abundance categories
                     diff.abund=NULL,  ## alternative parameterization: difference between most and least abundant category

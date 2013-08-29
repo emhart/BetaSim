@@ -1,4 +1,11 @@
-df_to_matrix <- function(d){
+#' Converts a dataframe output from betasim() or beta_predation() to a matrix
+#' based on earlier code by B. Bolker
+#' 
+#' @param d a multidimensional array from betasim() or beta_predation()
+#' @return a species x site matrix
+#' 
+
+array_to_matrix <- function(d){
   d2 <- as.data.frame.table(d)
 
   ## rearrange data frame to species matrix
