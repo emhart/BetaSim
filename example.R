@@ -4,7 +4,7 @@ require(reshape2)
 require(vegan)
 require(ggplot2)
 
-tmp <- betasim(n.site=2,p.mix=.7,spcat = 3 ,rand="poisson")
+tmp <- betasim(n.site=2,p.mix=c(0,1),n.abund=2,spcat = 5 ,rand="poisson")
 calcbeta(df_to_matrix(betasim(n.site=10,p.mix=.5,rand="poisson")))
 
 #### Mix of sites and probabilities of mixing

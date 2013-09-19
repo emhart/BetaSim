@@ -1,6 +1,8 @@
-
-
-
+#' Function to simulate a metacommunity for the calculation of beta diversity
+#' @param n.abund number of abundance categories
+#' @param p.abund relative ranking of subsequent abundance categories
+#' @param diff.abund alternative parameterization: difference between most and least abundant category
+#' @param spcat number of species per abundance category PER SITE (overdetermined)
 betasim <- function(n.abund=5,        ## number of abundance categories
                     p.abund=0.5,      ## relative ranking of subsequent abundance categories
                     diff.abund=NULL,  ## alternative parameterization: difference between most and least abundant category

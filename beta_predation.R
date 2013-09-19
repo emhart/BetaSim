@@ -1,3 +1,10 @@
+#' Needs full Roxygen documentation here
+#' but alpha must be either -1 or 1 where 1 is pref for common
+#' and -1 is pref for rare.  Just wanted to note that.  Gamma 
+#'
+
+
+
 
 beta_predation <-function(d,
                           pred.spec=c("none","focal","abund"),
@@ -41,21 +48,12 @@ beta_predation <-function(d,
     pred.logis[] <- pred.logis[] + ifelse(origsite,pred.alpha,-pred.alpha)
     
     ### preference for common species
-    } else if (pred.spec=="cabund") {
+    } else if (pred.spec=="abund") {
 
     for(i in 1:dim(d)[3]){
-      pred.logis[,,i] <- pred.alpha*pred.gamma*beta_abun_score(d[,,i])
+      pred.logis[,,i] <- pred.gamma*beta_abun_score(d[,,i],pred.alpha)
     }
-    
-    
-    ### Preference for rare spceies
-  } else if (pred.spec=="rabund") {
-    
-    for(i in 1:dim(d)[3]){
-      pred.logis[,,i] <- pred.alpha*pred.gamma*beta_abun_score(d[,,i],reverse=TRUE)
     }
-    
-  }
   ## survival probability is COMPLEMENTARY plogis() ...
   survprob <- plogis(pred.logis,lower.tail=FALSE)
   d[] <- if (pred.rand=="binom") {

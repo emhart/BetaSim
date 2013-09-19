@@ -1,3 +1,5 @@
+#' Calculate beta diversity
+
 
 calcbeta <- function(m,method="jaccard",trap.errors=TRUE,
                      distances=c("centroid","pairwise")) {
@@ -21,5 +23,5 @@ calcbeta <- function(m,method="jaccard",trap.errors=TRUE,
   } else {
     retval <- c(unclass(vv)) 
   }
-  retval
+  return(retval)
 }
